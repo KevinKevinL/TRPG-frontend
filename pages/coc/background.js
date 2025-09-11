@@ -30,7 +30,15 @@ const BackgroundPage = () => {
   const { profession: professionTitle} = router.query;
   const profession = professionTitle && PROFESSIONS[professionTitle];
   const [validationErrors, setValidationErrors] = useState([]); 
-  const currentCharacterId = localStorage.getItem('currentCharacterId');
+  const [currentCharacterId, setCurrentCharacterId] = useState(null);
+
+  // 仅在浏览器环境读取 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const id = window.localStorage.getItem('currentCharacterId');
+      setCurrentCharacterId(id);
+    }
+  }, []);
 
   // 从数据库加载背景数据
   useEffect(() => {
@@ -127,7 +135,7 @@ const BackgroundPage = () => {
       return;
     }
     try {
-      const currentCharacterId = localStorage.getItem('currentCharacterId');
+      const currentCharacterId = typeof window !== 'undefined' ? window.localStorage.getItem('currentCharacterId') : null;
       if (!currentCharacterId) {
         setShowError('找不到角色ID，请重新开始创建角色');
         return;
