@@ -66,6 +66,4 @@ tsconfig.tsbuildinfo
 
 .env
 package-lock.json
-package.json
-pages/api/db.js
 *.pyc
