@@ -22,14 +22,26 @@ export default async function handler(req, res) {
             body: JSON.stringify({ prompt }),
         });
         
-        // 确保响应成功
+        const contentType = backendResponse.headers.get('content-type') || '';
+
         if (!backendResponse.ok) {
-            const errorData = await backendResponse.json();
-            throw new Error(errorData.detail || "Python backend returned an error.");
+            if (contentType.includes('application/json')) {
+                const errorData = await backendResponse.json().catch(() => ({}));
+                const message = errorData.detail || errorData.error || `Backend error ${backendResponse.status}`;
+                throw new Error(message);
+            } else {
+                const text = await backendResponse.text().catch(() => '');
+                throw new Error(`Backend error ${backendResponse.status}. Body: ${text.slice(0, 300)}`);
+            }
         }
-        
-        const data = await backendResponse.json();
-        return res.status(200).json(data);
+
+        if (contentType.includes('application/json')) {
+            const data = await backendResponse.json();
+            return res.status(200).json(data);
+        } else {
+            const text = await backendResponse.text();
+            return res.status(200).json({ result: text });
+        }
 
     } catch (err) {
         console.error("Error in /api/characterDescription:", err.message);
