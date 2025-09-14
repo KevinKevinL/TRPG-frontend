@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     try {
         // 向 Python 后端发送请求
         const pythonBackendUrl = `${process.env.BACKEND_URL}/api/generate_description`;
+        console.log('Requesting backend URL:', pythonBackendUrl);
 
         const backendResponse = await fetch(pythonBackendUrl, {
             method: 'POST',
@@ -23,6 +24,8 @@ export default async function handler(req, res) {
         });
         
         const contentType = backendResponse.headers.get('content-type') || '';
+        console.log('Backend response status:', backendResponse.status);
+        console.log('Backend response content-type:', contentType);
 
         if (!backendResponse.ok) {
             if (contentType.includes('application/json')) {
