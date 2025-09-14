@@ -11,12 +11,9 @@ import { Menu, X } from 'lucide-react';
 import DatabaseManager from '@components/coc/DatabaseManager';
 
 export default function MainPlay() {
-  // 硬编码使用指定的角色ID进行测试
-  const currentCharacterId = "bf4cacb2cfe76cacf804fc87bb7913e32e4fc05ace2a7a906c0fb621853bffff";
-  
-  // 从 DatabaseManager 获取当前角色ID - 修复：只在组件初始化时调用一次
-  // const databaseManager = DatabaseManager();
-  // const { currentCharacterId } = databaseManager;
+  // 从 DatabaseManager 获取当前角色ID
+  const databaseManager = DatabaseManager();
+  const { currentCharacterId } = databaseManager;
   
   const [messages, setMessages] = useState([
     { 
